@@ -1,0 +1,49 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Bullet : MonoBehaviour
+{
+    public float speed = 10f;
+    public float max_range = 15f;
+    public GameObject explosion_effect;
+
+    private Vector3 start_position;
+
+    // Start is called before the first frame update
+    private void Start()
+    {
+        start_position = transform.position;    
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        // 총알을 앞으로 이동
+        transform.Translate(Vector3.up * speed * Time.deltaTime);
+
+        // 사정거리 초과 시 제거
+        if(Vector3.Distance(start_position, transform.position) >= max_range)
+        {
+            Explode();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 충돌 시 폭발
+        Explode();
+    }
+
+    private void Explode()
+    {
+        // 폭발 이펙트 생성
+        if(null != explosion_effect)
+        {
+            Instantiate(explosion_effect, transform.position, Quaternion.identity);
+        }
+
+        // 총알 제거
+        Destroy(gameObject);
+    }
+}
