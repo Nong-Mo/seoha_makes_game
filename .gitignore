@@ -70,3 +70,24 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+
+# Photon 관련 자동 생성 파일 및 설정 파일
+
+# Photon Server Settings (앱 ID와 같은 민감한 정보가 포함됨)
+PhotonServerSettings.asset
+PhotonServerSettings.asset.meta
+
+# Photon Fusion에서 생성되는 임시 파일 및 폴더
+/[Aa]ssets/PhotonFusion/Runtime/**/Generated/
+[Aa]ssets/PhotonFusion/Editor/**/Generated/
+
+# Photon Realtime이나 Quantum 사용 시
+/[Aa]ssets/Photon/Quantum/Generated/
+[Aa]ssets/Photon/Realtime/Generated/
+
+# Photon 자동 빌드 관련 캐시 파일
+/[Aa]ssets/PhotonCache/
+
+# Photon Cloud JSON 설정 파일 (만약 프로젝트에서 사용한다면)
+PhotonCloudConfig.json
