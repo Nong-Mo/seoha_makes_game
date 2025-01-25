@@ -51,7 +51,10 @@ public class Bullet : MonoBehaviour
             Instantiate(explosion_effect, transform.position, Quaternion.identity);
         }
 
-        // 총알 제거
-        Destroy(gameObject);
+        // 오브젝트 제거 대신 Kill() 호출
+        if (null != rewindable)
+            rewindable.Kill();
+        else
+            gameObject.SetActive(false);
     }
 }
