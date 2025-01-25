@@ -37,4 +37,16 @@ public class RewindManager : MonoBehaviour
         foreach (var obj in rewindable_objects)
             obj.StopRewind();
     }
+
+    public void AddRewindableObject(RewindableObject obj) {
+        if(!rewindable_objects.Contains(obj)) {
+            rewindable_objects.Add(obj);
+        }
+    }
+
+    public void RemoveRewindableObject(RewindableObject obj) {
+        if(rewindable_objects.Contains(obj)) {
+            rewindable_objects.Remove(obj);
+        }
+    }
 }
