@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    public Vector3 MoveVector3 = Vector3.zero;
+    public Vector3 MoveVector2 = Vector2.zero;
     [SerializeField]
     public float MoveSpeed;
 
@@ -28,6 +28,6 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        transform.Translate(MoveVector3 * MoveSpeed * Time.fixedDeltaTime * Time.timeScale);
+        transform.Translate(MoveVector2 * MoveSpeed * Time.fixedDeltaTime * Time.timeScale);
     }
 }

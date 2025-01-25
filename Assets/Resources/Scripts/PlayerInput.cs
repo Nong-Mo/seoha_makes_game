@@ -35,8 +35,8 @@ public class PlayerInput : MonoBehaviour
         var h = Input.GetAxisRaw("Horizontal");
         var v = Input.GetAxisRaw("Vertical");
 
-        Vector3 move_vector = (Vector3.up * v) + (Vector3.right * h);
-        player_controller.MoveVector3 = move_vector;
+        Vector2 move_vector = (Vector2.up * v) + (Vector2.right * h);
+        player_controller.MoveVector2 = move_vector;
     }
 
     private void Fire()

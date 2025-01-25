@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
     public float max_range = 15f;
     public GameObject explosion_effect;
 
-    private Vector3 start_position;
+    private Vector2 start_position;
     private RewindableObject rewindable;
 
     // Start is called before the first frame update
@@ -28,7 +28,7 @@ public class Bullet : MonoBehaviour
     private void Update()
     {
         // 총알을 앞으로 이동
-        transform.Translate(Vector3.up * speed * Time.deltaTime);
+        transform.Translate(Vector2.up * speed * Time.deltaTime);
 
         // 사정거리 초과 시 제거
         if(Vector3.Distance(start_position, transform.position) >= max_range)

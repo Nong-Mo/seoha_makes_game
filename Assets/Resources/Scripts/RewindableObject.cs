@@ -6,17 +6,17 @@ public class RewindableObject : MonoBehaviour
 {
     private bool is_rewinding = false;
     private List<ObjectState> state_history = new List<ObjectState>();
-    private Rigidbody rb;
+    private Rigidbody2D rb;
     public float rewind_duration = 3f;
 
     private struct ObjectState
     {
-        public Vector3 position;
+        public Vector2 position;
         public Quaternion rotation;
-        public Vector3 velocity;
+        public Vector2 velocity;
         public bool is_active;
 
-        public ObjectState(Vector3 position, Quaternion rotation, Vector3 velocity, bool is_active)
+        public ObjectState(Vector2 position, Quaternion rotation, Vector2 velocity, bool is_active)
         {
             this.position = position;
             this.rotation = rotation;
@@ -28,7 +28,7 @@ public class RewindableObject : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private void FinxedUpdate()
@@ -39,7 +39,7 @@ public class RewindableObject : MonoBehaviour
             RecordState();
     }
 
-    public void RecordInitialState(Vector3 position, Quaternion rotation)
+    public void RecordInitialState(Vector2 position, Quaternion rotation)
     {
         state_history.Insert(0, new ObjectState(position, rotation, Vector3.zero, true));
     }
