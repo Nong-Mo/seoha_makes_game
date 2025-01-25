@@ -10,25 +10,21 @@ public class PlayerInput : MonoBehaviour
 
     // Start is called before the first frame update
     // 맨 처음 한 번 Start 호출
-    private void Start()
-    {
+    private void Start() {
         player_controller = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     // 프레임 당 한 번 호출되는 로직
-    private void Update()
-    {
+    private void Update() {
         PCInput();
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         
     }
 
-    private void PCInput()
-    {
+    private void PCInput() {
         if (Input.GetButtonDown("Fire1"))
             Fire();
 
@@ -39,10 +35,8 @@ public class PlayerInput : MonoBehaviour
         player_controller.MoveVector2 = move_vector;
     }
 
-    private void Fire()
-    {
-        if (null != bullet_prefab && null != fire_point)
-        {
+    private void Fire() {
+        if (null != bullet_prefab && null != fire_point) {
             Instantiate(bullet_prefab, fire_point.position, fire_point.rotation);
         }
     }

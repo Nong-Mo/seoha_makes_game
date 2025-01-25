@@ -10,24 +10,20 @@ public class PlayerController : MonoBehaviour
     public float MoveSpeed;
 
     // Start is called before the first frame update
-    private void Start()
-    {
+    private void Start() {
         
     }
 
     // Update is called once per frame
-    private void Update()
-    {
+    private void Update() {
         
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         Move();
     }
 
-    private void Move()
-    {
+    private void Move() {
         transform.Translate(MoveVector2 * MoveSpeed * Time.fixedDeltaTime * Time.timeScale);
     }
 }
