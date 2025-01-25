@@ -57,9 +57,18 @@ public class RewindableObject : MonoBehaviour
     }
 
     private void RecordState() {
-        if (state_history.Count > Mathf.Round(rewind_duration / Time.fixedDeltaTime))
-            state_history.RemoveAt(state_history.Count - 1);
+        if (state_history.Count > Mathf.Round(rewind_duration / Time.fixedDeltaTime)) {
+            ObjectState oldest_state = state_history[state_history.Count - 1];
 
+            // 리스트의 가장 오래된  상태가 비활성화 상태라면 오브젝트를 삭제
+            if(!oldest_state.is_active) {
+                Destroy(gameObject);
+                return; // 이후 로직 실행 방지
+            }
+
+            state_history.RemoveAt(state_history.Count - 1);
+        }
+            
         state_history.Insert(0, new ObjectState(transform.position, transform.rotation, rb.velocity, gameObject.activeSelf));
     }
 
