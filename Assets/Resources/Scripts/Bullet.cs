@@ -9,11 +9,19 @@ public class Bullet : MonoBehaviour
     public GameObject explosion_effect;
 
     private Vector3 start_position;
+    private RewindableObject rewindable;
 
     // Start is called before the first frame update
     private void Start()
     {
-        start_position = transform.position;    
+        start_position = transform.position;
+        rewindable = GetComponent<RewindableObject>();
+
+        // 생성 시 초기 상태 기록
+        if(null != rewindable)
+        {
+            rewindable.RecordInitialState(transform.position, transform.rotation);
+        }
     }
 
     // Update is called once per frame

@@ -39,6 +39,11 @@ public class RewindableObject : MonoBehaviour
             RecordState();
     }
 
+    public void RecordInitialState(Vector3 position, Quaternion rotation)
+    {
+        state_history.Insert(0, new ObjectState(position, rotation, Vector3.zero, true));
+    }
+
     public void StartRewind()
     {
         is_rewinding = true;
@@ -69,6 +74,7 @@ public class RewindableObject : MonoBehaviour
 
     public void Kill()
     {
+        
         gameObject.SetActive(false); // 오브젝트 비활성화 
     }
 
@@ -90,7 +96,7 @@ public class RewindableObject : MonoBehaviour
         }
         else
         {
-            StopRewind();
+            gameObject.SetActive(false);
         }
     }
 }
