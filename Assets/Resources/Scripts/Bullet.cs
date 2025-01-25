@@ -31,7 +31,7 @@ public class Bullet : MonoBehaviour
         transform.Translate(Vector2.up * speed * Time.deltaTime);
 
         // 사정거리 초과 시 제거
-        if(Vector3.Distance(start_position, transform.position) >= max_range)
+        if(Vector2.Distance(start_position, transform.position) >= max_range)
         {
             Explode();
         }
