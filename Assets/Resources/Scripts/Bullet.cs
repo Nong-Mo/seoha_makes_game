@@ -16,6 +16,15 @@ public class Bullet : MonoBehaviour
         start_position = transform.position;
         rewindable = GetComponent<RewindableObject>();
 
+        // RewindManager에 동적 추가
+        var rewind_manager = FindObjectOfType<RewindManager>();
+        if (null != rewind_manager && null != rewindable) {
+            rewind_manager.AddRewindableObject(rewindable);
+            Debug.Log("RewindManager에 Bullet이 등록 되었습니다.");
+        }
+        else
+            Debug.Log("rewind 정보가 충분하지 않습니다.");
+ 
         // 생성 시 초기 상태 기록
         if(null != rewindable)
             rewindable.RecordInitialState(transform.position, transform.rotation);
@@ -44,9 +53,16 @@ public class Bullet : MonoBehaviour
 
 
         // 오브젝트 제거 대신 Kill() 호출
-        if (null != rewindable)
+        if (null != rewindable) {
             rewindable.Kill();
-        else
+
+            // RewindManager에서 동적 제거
+            var rewind_manager = FindObjectOfType<RewindManager>();
+            if (null != rewind_manager)
+                rewind_manager.RemoveRewindableObject(rewindable);   
+        }
+        else {
             gameObject.SetActive(false);
+        }
     }
 }

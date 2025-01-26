@@ -20,15 +20,17 @@ public class RewindManager : MonoBehaviour
 
 
         // R키를 떼면 리와인드 종료
-        if(Input.GetKeyDown(KeyCode.R))
+        if(Input.GetKeyUp(KeyCode.R))
             StopRewind();
     }
 
     public void StartRewind() {
         is_rewinding = true;
 
-        foreach(var obj in rewindable_objects)
+        foreach (var obj in rewindable_objects) {
+            Debug.Log(obj);
             obj.StartRewind();
+        }
     }
 
     public void StopRewind() { 

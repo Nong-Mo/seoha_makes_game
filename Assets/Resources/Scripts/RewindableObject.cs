@@ -5,10 +5,13 @@ using UnityEngine;
 public class RewindableObject : MonoBehaviour
 {
     private bool is_rewinding = false;
+
+    [SerializeField]
     private List<ObjectState> state_history = new List<ObjectState>();
     private Rigidbody2D rb;
     public float rewind_duration = 3f;
 
+    [System.Serializable]
     private struct ObjectState {
         public Vector2 position;
         public Quaternion rotation;
@@ -28,9 +31,12 @@ public class RewindableObject : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    private void FinxedUpdate() {
-        if (is_rewinding)
+    private void FixedUpdate() {
+        Debug.Log($"FixedUpdate 실행됨: {gameObject.name}, is_rewinding: {is_rewinding}");
+        if (is_rewinding) {
+            Debug.Log("in Rewind");
             Rewind();
+        }
         else
             RecordState();
     }
@@ -40,13 +46,14 @@ public class RewindableObject : MonoBehaviour
     }
 
     public void StartRewind() {
+        Debug.Log("In StartRewind");
         is_rewinding = true;
         rb.isKinematic = true; // 물리 비활성화
     }
 
     public void StopRewind() {
         is_rewinding = false;
-        rb.isKinematic = false;
+        rb.isKinematic = true;
 
         // 리와인드 종료 후 마지막 상태 복구
         if (state_history.Count > 0) {
@@ -79,6 +86,14 @@ public class RewindableObject : MonoBehaviour
     private void Rewind() { 
         if (0 < state_history.Count) {
             ObjectState state = state_history[0]; // 최근 상태 가져오기
+
+            // 현재 상태와 최근 상태를 비교하며 로그 출력
+            Debug.Log($"[Rewind] 최근 상태: Position={state.position}, Rotation={state.rotation.eulerAngles}, " +
+                      $"Velocity={state.velocity}, IsActive={state.is_active}");
+            Debug.Log($"[Rewind] 현재 상태: Position={transform.position}, Rotation={transform.rotation.eulerAngles}, " +
+                      $"Velocity={(rb != null ? rb.velocity : Vector2.zero)}, IsActive={gameObject.activeSelf}");
+
+
             transform.position = state.position;
             transform.rotation = state.rotation;
 
