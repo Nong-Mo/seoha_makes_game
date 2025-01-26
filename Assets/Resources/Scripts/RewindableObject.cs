@@ -9,7 +9,7 @@ public class RewindableObject : MonoBehaviour
     [SerializeField]
     private List<ObjectState> state_history = new List<ObjectState>();
     private Rigidbody2D rb;
-    public float rewind_duration = 3f;
+    public float rewind_duration = 2f;
 
     // 플레이어/총알 등 오브젝트에 따라 값을 달리 세팅
     public bool can_destroy_when_history_empty = true;
@@ -34,7 +34,7 @@ public class RewindableObject : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    private void FixedUpdate() {
+    public void ManualFixedUpdate() {
         Debug.Log($"FixedUpdate 실행됨: {gameObject.name}, is_rewinding: {is_rewinding}");
         if (is_rewinding) {
             Debug.Log("in Rewind");
@@ -70,12 +70,6 @@ public class RewindableObject : MonoBehaviour
         if (state_history.Count > Mathf.Round(rewind_duration / Time.fixedDeltaTime)) {
             ObjectState oldest_state = state_history[state_history.Count - 1];
 
-            // 리스트의 가장 오래된  상태가 비활성화 상태라면 오브젝트를 삭제
-            if(!oldest_state.is_active) {
-                Destroy(gameObject);
-                return; // 이후 로직 실행 방지
-            }
-
             state_history.RemoveAt(state_history.Count - 1);
         }
             
@@ -84,6 +78,12 @@ public class RewindableObject : MonoBehaviour
 
     public void Kill() {
         gameObject.SetActive(false); // 오브젝트 비활성화 
+
+        // RewindManager에 등록
+        var rewind_manager = FindObjectOfType<RewindManager>();
+        if (null != rewind_manager) {
+            rewind_manager.RegisterKilledObject(this);
+        }
     }
 
     private void Rewind() { 
@@ -95,20 +95,18 @@ public class RewindableObject : MonoBehaviour
                       $"Velocity={state.velocity}, IsActive={state.is_active}");
             Debug.Log($"[Rewind] 현재 상태: Position={transform.position}, Rotation={transform.rotation.eulerAngles}, " +
                       $"Velocity={(rb != null ? rb.velocity : Vector2.zero)}, IsActive={gameObject.activeSelf}");
-
+         
+            gameObject.SetActive(state.is_active);
 
             transform.position = state.position;
             transform.rotation = state.rotation;
 
-            // 죽은 오브젝트 복구
-            if (!state.is_active)
-                gameObject.SetActive(true);
- 
             state_history.RemoveAt(0); // 최근 상태 삭제
         }
         else {
-            if(can_destroy_when_history_empty)
-                gameObject.SetActive(false);
+            if (can_destroy_when_history_empty) {
+                Destroy(gameObject);
+            }
         }
     }
 }

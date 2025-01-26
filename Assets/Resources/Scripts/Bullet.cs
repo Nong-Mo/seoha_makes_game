@@ -54,12 +54,7 @@ public class Bullet : MonoBehaviour
 
         // 오브젝트 제거 대신 Kill() 호출
         if (null != rewindable) {
-            rewindable.Kill();
-
-            // RewindManager에서 동적 제거
-            var rewind_manager = FindObjectOfType<RewindManager>();
-            if (null != rewind_manager)
-                rewind_manager.RemoveRewindableObject(rewindable);   
+            rewindable.Kill(); 
         }
         else {
             gameObject.SetActive(false);
