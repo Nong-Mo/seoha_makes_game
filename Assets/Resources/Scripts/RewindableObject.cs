@@ -11,6 +11,9 @@ public class RewindableObject : MonoBehaviour
     private Rigidbody2D rb;
     public float rewind_duration = 3f;
 
+    // 플레이어/총알 등 오브젝트에 따라 값을 달리 세팅
+    public bool can_destroy_when_history_empty = true;
+
     [System.Serializable]
     private struct ObjectState {
         public Vector2 position;
@@ -104,7 +107,8 @@ public class RewindableObject : MonoBehaviour
             state_history.RemoveAt(0); // 최근 상태 삭제
         }
         else {
-            gameObject.SetActive(false);
+            if(can_destroy_when_history_empty)
+                gameObject.SetActive(false);
         }
     }
 }
