@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 2756992578902800524}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.13, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -99,7 +99,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 20
   m_Sprite: {fileID: -7008412969330441016, guid: 4a7c0da22d195094c996d9182a363b82,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -147,9 +147,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!58 &445828662854639674
 CircleCollider2D:
@@ -183,7 +183,7 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.03, y: 0.16}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.40029982
 --- !u!114 &-152448123026984602
@@ -211,9 +211,11 @@ MonoBehaviour:
     m_Bits: 0
   attackInterval: 2
   damage: 10
-  attackEffect: {fileID: 2433282508537954060, guid: 12c5647bb8a8ffd4da41e4fc981b0f28,
+  attackEffect: {fileID: 5318118474938795680, guid: 72199d81b899bd54a94042c00dfe11e6,
     type: 3}
-  health: 100
+  health: 50
+  attackSound: {fileID: 8300000, guid: dd3038f52826f4142afe73f521a687b2, type: 3}
+  walkSound: {fileID: 0}
 --- !u!1 &6668990098306787780
 GameObject:
   m_ObjectHideFlags: 0

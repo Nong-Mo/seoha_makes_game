@@ -4,8 +4,13 @@ using System.Collections.Generic;
 
 public class TilemapPathfinder : MonoBehaviour
 {
-    private Tilemap wallTilemap;
-    private Tilemap floorTilemap;
+    [SerializeField] private Tilemap wallTilemap;   // Wall 타일맵 하나만 참조
+    [SerializeField] private Tilemap floorTilemap;  // Floor 타일맵 하나만 참조
+
+    // Wall의 두번째 타일맵
+    [SerializeField] private Tilemap wallTilemap2;
+    // Floor의 두번째 타일맵
+    [SerializeField] private Tilemap floorTilemap2;
 
     private static readonly Vector3Int[] directions = {
         new Vector3Int(1,0,0), new Vector3Int(-1,0,0),  // 동서
@@ -24,7 +29,6 @@ public class TilemapPathfinder : MonoBehaviour
     {
         TilemapPathfinder pathfinder = FindObjectOfType<TilemapPathfinder>();
         Vector3Int cellPos = pathfinder.WorldToCell(transform.position);
-        Debug.Log($"Spawn point cell position: {cellPos}");
     }
 
     void Awake()
@@ -32,17 +36,22 @@ public class TilemapPathfinder : MonoBehaviour
         GameObject wallObj = GameObject.FindGameObjectWithTag("Wall");
         GameObject floorObj = GameObject.FindGameObjectWithTag("Floor");
 
-        if (wallObj != null) wallTilemap = wallObj.GetComponent<Tilemap>();
-        if (floorObj != null) floorTilemap = floorObj.GetComponent<Tilemap>();
+        if (wallObj != null)
+        {
+            wallTilemap = wallObj.GetComponent<Tilemap>();
+        }
 
-        Debug.Log($"TilemapPathfinder initialized - Wall: {wallTilemap != null}, Floor: {floorTilemap != null}");
+
+        if (floorObj != null)
+        {
+            floorTilemap = floorObj.GetComponent<Tilemap>();
+        }
     }
 
     public List<Vector3> FindPath(Vector3 startWorldPos, Vector3 endWorldPos)
     {
         if (wallTilemap == null || floorTilemap == null)
         {
-            Debug.LogError("TilemapPathfinder: Required tilemaps not found!");
             return new List<Vector3>();
         }
 
@@ -51,13 +60,11 @@ public class TilemapPathfinder : MonoBehaviour
 
         if (!IsWalkable(startCell))
         {
-            Debug.LogWarning($"Start position not walkable: {startCell}");
             return new List<Vector3>();
         }
 
         if (!IsWalkable(endCell))
         {
-            Debug.LogWarning($"End position not walkable: {endCell}");
             return new List<Vector3>();
         }
 
@@ -104,28 +111,12 @@ public class TilemapPathfinder : MonoBehaviour
             }
             path.Add(CellCenterToWorld(startCell));
             path.Reverse();
-            Debug.Log($"Path found with {path.Count} points");
         }
-        else
-        {
-            Debug.LogWarning("No path found!");
-        }
-
         return path;
-    }
-
-    public bool IsWithinTilemapBounds(Vector3Int cellPos)
-    {
-        BoundsInt bounds = floorTilemap.cellBounds;
-        return bounds.Contains(cellPos);
     }
 
     private bool IsWalkable(Vector3Int cellPos)
     {
-        // 범위 밖이면 갈 수 없음
-        if (!IsWithinTilemapBounds(cellPos))
-            return false;
-
         // 벽이 있으면 갈 수 없음 
         if (wallTilemap.HasTile(cellPos))
             return false;
@@ -134,8 +125,7 @@ public class TilemapPathfinder : MonoBehaviour
         if (floorTilemap.HasTile(cellPos))
             return true;
 
-        // 타일맵 범위 안이면서 바닥이 없는 곳도 이동 가능
-        return true;
+        return false;
     }
 
     private Vector3 CellCenterToWorld(Vector3Int cellPos)

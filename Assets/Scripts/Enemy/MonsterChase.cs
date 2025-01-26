@@ -42,8 +42,16 @@ public class MonsterChase : MonoBehaviour
     public bool IsAttacking => isAttacking;
     public bool IsDead { get; private set; }
 
+    [Header("Audio")]
+    public AudioClip attackSound;
+    public AudioClip walkSound;
+    private AudioSource audioSource;
+    private float footstepTimer = 0f;         // 추가
+    private float footstepInterval = 0.5f;    // 추가
+
     void Start()
     {
+        audioSource = gameObject.AddComponent<AudioSource>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         pathfinder = FindObjectOfType<TilemapPathfinder>();
@@ -102,14 +110,19 @@ public class MonsterChase : MonoBehaviour
         if (stateTimer <= 0)
             SwitchState();
 
-        if (isPlayerInRange)
+        // 플레이어와의 거리 계산
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+
+        if (isPlayerInRange && distanceToPlayer <= 1.5f) // 공격 거리 명확히 지정
         {
             rb.velocity = Vector2.zero;
             if (!isAttacking)
                 StartCoroutine(Attack());
         }
         else
+        {
             FollowPath();
+        }
     }
 
     void UpdatePath()
@@ -167,6 +180,7 @@ public class MonsterChase : MonoBehaviour
             case MovementState.Retreat:
                 Vector3 awayDir = transform.position - player.position;
                 targetPos = transform.position + awayDir.normalized * surroundRadius;
+                pathUpdateTimer = pathUpdateInterval * 2f;
                 break;
         }
 
@@ -228,6 +242,16 @@ public class MonsterChase : MonoBehaviour
 
         rb.velocity = finalDirection * currentSpeed;
 
+        if (rb.velocity.magnitude > 0.1f)
+        {
+            footstepTimer += Time.deltaTime;
+            if (footstepTimer >= footstepInterval)
+            {
+                audioSource.PlayOneShot(walkSound);
+                footstepTimer = 0f;
+            }
+        }
+
         if (animator != null)
         {
             animator.SetFloat("X", finalDirection.x);
@@ -258,11 +282,19 @@ public class MonsterChase : MonoBehaviour
         if (animator != null)
             animator.SetTrigger("Attack");
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(1f);
 
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-            playerHealth.TakeDamage(damage);
+        // 플레이어가 여전히 범위 안에 있는지 확인
+        if (!isPlayerInRange || player == null)
+        {
+            isAttacking = false;
+            if (animator != null)
+                animator.SetTrigger("Idle");
+            yield break;
+        }
+
+        if (attackSound != null)
+            audioSource.PlayOneShot(attackSound);
 
         if (attackEffect != null)
         {
@@ -274,7 +306,11 @@ public class MonsterChase : MonoBehaviour
                 Destroy(effect, 1f);
         }
 
-        yield return new WaitForSeconds(attackInterval - 0.3f);
+        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+        if (playerHealth != null && isPlayerInRange) // 한번 더 확인
+            playerHealth.TakeDamage(damage);
+
+        yield return new WaitForSeconds(attackInterval - 0.5f);
         isAttacking = false;
         rb.velocity = Vector2.zero;
         if (animator != null)
