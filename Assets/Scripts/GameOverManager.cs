@@ -29,6 +29,8 @@ public class GameOverManager : MonoBehaviour
     // 재도전 버튼 클릭 시 호출
     public void RestartGame()
     {
-        SceneManager.LoadScene("MonsterScene"); // 게임 씬으로 전환
+        // 씬을 새로 로드하기 전에 시간 스케일 리셋
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MonsterScene");
     }
 }
